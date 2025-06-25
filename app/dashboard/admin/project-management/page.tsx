@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, Sparkles } from "lucide-react";
+import { CalendarDays, Sparkles, FileText, Clock, User, AlertCircle } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -18,28 +18,25 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function employeesManagementPage() {
+// Dummy employees data
+const employees = [
+  { id: 1, status: "completed", progress: 100, deadline: "2024-07-10" },
+  { id: 2, status: "in-progress", progress: 60, deadline: "2024-07-20" },
+  { id: 3, status: "in-progress", progress: 40, deadline: "2024-08-01" },
+  { id: 4, status: "completed", progress: 100, deadline: "2024-06-15" },
+];
+
+export default function EmployeesManagementPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [segment, setSegment] = useState("");
-  const [dateRange, setDateRange] = useState("Jun 1 - Jun 30");
   const [frequency, setFrequency] = useState("Monthly");
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date()
-  );
-
-  // Dummy date range change logic
-  const handleDateRangeClick = () => {
-    setDateRange(
-      dateRange === "Jun 1 - Jun 30" ? "Jul 1 - Jul 31" : "Jun 1 - Jun 30"
-    );
-  };
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
 
   const handleFilter = () => setIsDialogOpen(false);
 
   const handleAIAssistant = () => {
-    // Add your AI assistant logic here
     alert("AI Assistant coming soon!");
   };
 
@@ -129,91 +126,85 @@ export default function employeesManagementPage() {
             AI Assistant
           </Button>
         </div>
-        {/* Employees */}
-        {/* Overview Tab */}
-        <div className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Employees
-                </CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{employees.length}</div>
-                <p className="text-xs text-muted-foreground">
-                  {employees.filter((p) => p.status === "completed").length}{" "}
-                  completed
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  In Progress
-                </CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {employees.filter((p) => p.status === "in-progress").length}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  {Math.round(
-                    employees
-                      .filter((p) => p.status === "in-progress")
-                      .reduce((acc, p) => acc + p.progress, 0) /
-                      Math.max(
-                        1,
-                        employees.filter((p) => p.status === "in-progress")
-                          .length
-                      )
-                  )}
-                  % avg. progress
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Team Members
-                </CardTitle>
-                <User className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">4</div>
-                <p className="text-xs text-muted-foreground">
-                  Across {employees.length} employees
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Upcoming Deadlines
-                </CardTitle>
-                <AlertCircle className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {
-                    employees.filter(
-                      (p) =>
-                        new Date(p.deadline) > new Date() &&
-                        p.status !== "completed"
-                    ).length
-                  }
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Within the next 30 days
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+      </div>
+      {/* Overview Tab */}
+      <div className="space-y-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Employees
+              </CardTitle>
+              <FileText className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{employees.length}</div>
+              <p className="text-xs text-muted-foreground">
+                {employees.filter((p) => p.status === "completed").length} completed
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                In Progress
+              </CardTitle>
+              <Clock className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {employees.filter((p) => p.status === "in-progress").length}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {Math.round(
+                  employees
+                    .filter((p) => p.status === "in-progress")
+                    .reduce((acc, p) => acc + p.progress, 0) /
+                    Math.max(
+                      1,
+                      employees.filter((p) => p.status === "in-progress").length
+                    )
+                )}
+                % avg. progress
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Team Members
+              </CardTitle>
+              <User className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">4</div>
+              <p className="text-xs text-muted-foreground">
+                Across {employees.length} employees
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Upcoming Deadlines
+              </CardTitle>
+              <AlertCircle className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {
+                  employees.filter(
+                    (p) =>
+                      new Date(p.deadline) > new Date() &&
+                      p.status !== "completed"
+                  ).length
+                }
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Within the next 30 days
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
